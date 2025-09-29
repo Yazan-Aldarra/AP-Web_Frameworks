@@ -1,0 +1,8 @@
+@for (recept of recepten; track $index ) {
+    <app-recept-kaart 
+        [name]="recept.titel"
+        [id]="recept.id"
+        [time]="recept.tijd"
+        [labels]="recept.labels"
+    ></app-recept-kaart>
+}

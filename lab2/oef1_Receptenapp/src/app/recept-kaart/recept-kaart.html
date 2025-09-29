@@ -1,0 +1,16 @@
+<h2>
+    Recept Name: {{ name }}
+</h2>
+<h3>
+    id: {{ id }}
+</h3>
+<h4> 
+    {{ time }}
+</h4>
+<ul>
+    <li> 
+        @for (label of labels; track $index) {
+            <app-label [name]="label"></app-label>
+        }
+    </li>
+</ul>

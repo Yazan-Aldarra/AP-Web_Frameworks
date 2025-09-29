@@ -1,0 +1,23 @@
+@switch (currQuest) {
+    @default {
+        
+        {{ questions[currQuest].question }}
+        
+        <input [(ngModel)]="inAnswer">
+        
+        <button (click)="checkAnswer()">Check answer</button>
+        <p>
+            @if (ansState == true) 
+                { You answer is correct!, +1 to ur score }
+            @else if (ansState == false)
+                { You answer is Wrong!, -1 off ur score }
+        </p>
+        <h3>
+            Score: {{ score }}
+        </h3>
+    }
+    @case (-1) {
+        <h2>You Win!!</h2>
+        <h3>score: {{ score }}</h3>
+    }
+}

@@ -1,0 +1,19 @@
+<input [(ngModel)]="inName">
+<button (click)="addTask()">Add Task</button>
+
+<ul> 
+    @for (task of tasks; track task.id) {
+        <li>
+            <h4>id: {{task.id}}</h4>
+            <h3>{{task.name}}</h3>
+            <button (click)="verwijderTask(task)">Delete Task</button>
+        </li>
+    }
+    @if (inName != "") {
+        <li id="Preview">
+            <h2>Preview</h2>
+            <h4>id: Unkown</h4>
+            <h3>{{inName}}</h3>
+        </li>
+    }
+</ul>
