@@ -2,9 +2,9 @@
 ## CLI Config
 ### Inline Config
 ```bash
-    ng config schematics.@schematics/angular:component.inlineTemplate true
-    ng config schematics.@schematics/angular:component.inlineStyle true
-    ng config schematics.@schematics/angular:component.skipTests true
+    ng config -g schematics.@schematics/angular:component.inlineTemplate true
+    ng config -g schematics.@schematics/angular:component.inlineStyle true
+    ng config -g  schematics.@schematics/angular:component.skipTests true
 ```
 ### Skipping .git initialization
 

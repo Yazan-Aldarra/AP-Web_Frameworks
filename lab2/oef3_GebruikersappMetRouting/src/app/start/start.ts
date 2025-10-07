@@ -7,10 +7,14 @@ import { Component } from '@angular/core';
     <p>
       start works!
     </p>
+    <style> body {
+    }</style>
   `,
-  styles: [`body {
-    
-  }`]
+  styles: /*css*/`
+    body {
+      
+    }
+  `
 })
 export class Start {
 
