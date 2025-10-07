@@ -1,30 +1,39 @@
-import { Component } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators, FormArray} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { NgFor, NgIf, DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-bestelling',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgFor, NgIf, DecimalPipe],
   template: `
     <form [formGroup]="form">
-      <input placeholder="productd" formControlName="productd">
-      <input placeholder="aantald" formControlName="aantald">
-      <input placeholder="prijsd" formControlName="prijsd">
-      <input placeholder="klantd" formControlName="klantd">
-      <input placeholder="regelsd" formControlName="regelsd">
-      <input placeholder="opmerkingend" formControlName="opmerkingend">
+      <input placeholder="productd" formControlName="klant" />
+      <div formArrayName="regels">
+        @for (regel of regels.controls; let i = $index; track $index) {
+        <div [formGroupName]="i">
+          <label for="product">product</label>
+
+          <input name="product" formControlName="product" />
+          <label for="aantal">aantal</label>
+          @if (regel.get("product")?.invalid && regel.get("product")?.touched) {
+          <h2>product is INVALID</h2>
+          }
+          <input name="aantal" formControlName="aantal" />
+          <label for="prijs">prijs</label>
+          @if (regel.get("aantal")?.invalid) {
+          <h2>product is INVALID</h2>
+          }
+          <input name="prijs" formControlName="prijs" />
+        </div>
+        }
+      </div>
+      <label for="opmerkingen">Opmerkingen</label>
+      <textarea name="opmerkingen" formControlName="opmerkingen"></textarea>
     </form>
-    <div formArrayName="form">
-      @for (some of regels.controls; let i = $index; track $index) {
-        <input [placeholder]="i" [formControlName]="i">
-        <h2>
-          {{ some + " " + i }}
-        </h2>
-      }
-    </div>
   `,
   styles: ``,
 })
-export class Bestelling {
+export class Bestelling implements OnInit {
   regelGroup() {
     return new FormGroup({
       product: new FormControl<string>('', {
@@ -43,7 +52,7 @@ export class Bestelling {
   }
   form = new FormGroup({
     klant: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-    regels: new FormArray<FormGroup<any>>([this.regelGroup()]),
+    regels: new FormArray<FormGroup<any>>([this.regelGroup(), this.regelGroup()]),
     opmerkingen: new FormControl<string>('', { nonNullable: true }),
   });
   get regels() {
@@ -55,7 +64,10 @@ export class Bestelling {
       0
     );
   }
-  onSubmit() {
 
+  onSubmit() {}
+
+  ngOnInit(): void {
+    console.log(this.regels.controls);
   }
 }
