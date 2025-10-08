@@ -1,39 +1,72 @@
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { NgFor, NgIf, DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-bestelling',
-  imports: [ReactiveFormsModule, NgFor, NgIf, DecimalPipe],
+  imports: [ReactiveFormsModule],
   template: `
-    <form [formGroup]="form">
-      <input placeholder="productd" formControlName="klant" />
-      <div formArrayName="regels">
+    <form [formGroup]="form" (submit)="onSubmit()">
+      <label for="Naam">Naam</label>
+      <input placeholder="Yazan" formControlName="klant" />
+      <div class="regels" formArrayName="regels">
         @for (regel of regels.controls; let i = $index; track $index) {
-        <div [formGroupName]="i">
+        <div class="regel" [formGroupName]="i">
           <label for="product">product</label>
-
           <input name="product" formControlName="product" />
-          <label for="aantal">aantal</label>
           @if (regel.get("product")?.invalid && regel.get("product")?.touched) {
           <h2>product is INVALID</h2>
           }
+
+          <label for="aantal">aantal</label>
           <input name="aantal" formControlName="aantal" />
-          <label for="prijs">prijs</label>
-          @if (regel.get("aantal")?.invalid) {
-          <h2>product is INVALID</h2>
+          @if (regel.get("aantal")?.invalid && regel.get("aantal")?.touched) {
+          <h2>Aantal is INVALID</h2>
           }
+
+          <label for="prijs">prijs</label>
           <input name="prijs" formControlName="prijs" />
+          @if (regel.get("prijs")?.invalid && regel.get("prijs")?.touched) {
+          <h2>Prijs is INVALID</h2>
+          }
+
+          <button (click)="removeRegel(i)">Verwijder een regel</button>
         </div>
         }
       </div>
+      <button (click)="addRegel()">Voeg een regel</button>
+
+      <div>totale prijs: {{totaal}}</div>
+      @if (totaal >= 100) {
+        <div>Gratis verzending!</div>
+      }
+
       <label for="opmerkingen">Opmerkingen</label>
       <textarea name="opmerkingen" formControlName="opmerkingen"></textarea>
+
+      <button type="submit" [disabled]="form.invalid">Stuur</button>
     </form>
   `,
-  styles: ``,
+  styles: /*css*/ `
+    form {
+      display: flex;
+      flex-direction: column;
+      width: fit-content;
+      gap: .6rem;
+    }
+    .regels {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .regel {
+      display: flex;
+      gap: .5rem;
+    }
+
+
+  `,
 })
-export class Bestelling implements OnInit {
+export class Bestelling {
   regelGroup() {
     return new FormGroup({
       product: new FormControl<string>('', {
@@ -52,7 +85,7 @@ export class Bestelling implements OnInit {
   }
   form = new FormGroup({
     klant: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-    regels: new FormArray<FormGroup<any>>([this.regelGroup(), this.regelGroup()]),
+    regels: new FormArray<FormGroup<any>>([this.regelGroup()]),
     opmerkingen: new FormControl<string>('', { nonNullable: true }),
   });
   get regels() {
@@ -65,9 +98,16 @@ export class Bestelling implements OnInit {
     );
   }
 
-  onSubmit() {}
-
-  ngOnInit(): void {
-    console.log(this.regels.controls);
+  onSubmit() {
+    if (!this.form.invalid)
+      console.log("Form is submitted!");
+    else 
+      console.log("The form is invalid");
+  }
+  addRegel() {
+    this.form.controls.regels.push(this.regelGroup());
+  }
+  removeRegel(i: number) {
+    this.form.controls.regels.removeAt(i);
   }
 }
