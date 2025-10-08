@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { DecimalPipe, CurrencyPipe} from '@angular/common';
 
 @Component({
   selector: 'app-bestelling',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CurrencyPipe],
   template: `
     <form [formGroup]="form" (submit)="onSubmit()">
       <label for="Naam">Naam</label>
@@ -35,7 +36,7 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators, FormArray } fr
       </div>
       <button (click)="addRegel()">Voeg een regel</button>
 
-      <div>totale prijs: {{totaal}}</div>
+        <div>totale prijs: {{totaal | currency:'EUR'}}</div>
       @if (totaal >= 100) {
         <div>Gratis verzending!</div>
       }
